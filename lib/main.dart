@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -66,8 +67,27 @@ void main() {
           final level = (count ~/ 2) ~/ en.length;
 
           return Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
               title: Text('${egg(level)}論文執筆でよく出てくる英単語 ${level + 1}巡目'),
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              elevation: 0,
+              flexibleSpace: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.28),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.white.withValues(alpha: 0.45),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
             backgroundColor: count.isEven
                 ? const Color.fromARGB(255, 255, 201, 201)
@@ -78,6 +98,19 @@ void main() {
                 Positioned.fill(
                   child: InkWell(
                     onTap: () => step.value++,
+                    splashFactory: InkRipple.splashFactory,
+                    overlayColor: WidgetStateProperty.resolveWith((states) {
+                      final color = count.isEven
+                          ? const Color(0xFFF8D4DC)
+                          : const Color(0xFFCFEEF8);
+                      if (states.contains(WidgetState.pressed)) {
+                        return color.withValues(alpha: 0.42);
+                      }
+                      if (states.contains(WidgetState.hovered)) {
+                        return color.withValues(alpha: 0.18);
+                      }
+                      return Colors.transparent;
+                    }),
                     child: Center(
                       child: Text(
                         count.isEven ? 'JA: ${ja[i]}' : 'EN: ${en[i]}',
