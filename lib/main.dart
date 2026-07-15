@@ -65,11 +65,22 @@ void main() {
         builder: (context, count, _) {
           final i = (count ~/ 2) % en.length;
           final level = (count ~/ 2) ~/ en.length;
+          final isCompact = MediaQuery.sizeOf(context).width < 600;
 
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
-              title: Text('${egg(level)}論文執筆でよく出てくる英単語 ${level + 1}巡目'),
+              titleSpacing: isCompact ? 12 : 16,
+              title: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '${egg(level)}論文執筆でよく出てくる英単語 ${level + 1}巡目',
+                  maxLines: 1,
+                  softWrap: false,
+                  style: TextStyle(fontSize: isCompact ? 18 : 20),
+                ),
+              ),
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               elevation: 0,
@@ -111,10 +122,23 @@ void main() {
                       }
                       return Colors.transparent;
                     }),
-                    child: Center(
-                      child: Text(
-                        count.isEven ? 'JA: ${ja[i]}' : 'EN: ${en[i]}',
-                        style: const TextStyle(fontSize: 64),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isCompact ? 20 : 40,
+                      ),
+                      child: Center(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            count.isEven ? 'JA: ${ja[i]}' : 'EN: ${en[i]}',
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontSize: isCompact ? 44 : 64,
+                              height: 1.1,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
